@@ -1,14 +1,14 @@
 import './App.css';
-import Title from './components/Tittle';
 import Form from './components/Form';
+import Title from './components/Title';
 
 function App() {
   return (
-    <div>
+    <>
       <Title />
       <Form />
-    </div>
+    </>
+
   );
 }
-
 export default App;
