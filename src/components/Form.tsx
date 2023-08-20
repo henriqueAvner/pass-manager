@@ -7,13 +7,27 @@ export default function Form() {
   const [thisPassword, setThisPassword] = useState('');
   const [link, setLink] = useState('');
   const [disableButton, setdisabbleButton] = useState(true);
+  const passwordValidation = [
+    {
+      check: (password: string) => password.length >= 8,
+      message: 'Possuir 8 ou mais caracteres',
+    },
+    {
+      check: (password: string) => password.length <= 16,
+      message: 'Possuir até 16 caracteres',
+    },
+    {
+      check: (password: string) => /^(?=.*[a-zA-Z])(?=.*\d).*$/.test(password),
+      message: 'Possuir letras e números',
+    },
+    {
+      check: (password: string) => /[!@#$%^&*()_+{}[\]:;<>,.?~\\/-]/.test(password),
+      message: 'Possuir algum caractere especial',
+    },
+  ];
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
   }
-  const testPassword = () => {
-    const regex = /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[@#$%^&+=!]).{8,16}$/;
-    return regex.test(thisPassword);
-  };
 
   function handleForm() {
     if (serviceName !== ''
@@ -27,6 +41,10 @@ export default function Form() {
       setdisabbleButton(true);
     }
   }
+  const testPassword = () => {
+    const regex = /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[@#$%^&+=!]).{8,16}$/;
+    return regex.test(thisPassword);
+  };
 
   return (
     <div>
@@ -63,17 +81,32 @@ export default function Form() {
               value={ link }
               onChange={ ({ target }) => setLink(target.value) }
             />
+
             <button disabled={ disableButton }>
               Cadastrar
             </button>
+
             <button onClick={ () => { setOcultForm(!ocultForm); } }>Cancelar</button>
           </label>
-
+          <div>
+            {passwordValidation.map((validation, index) => (
+              <p
+                key={ index }
+                className={ validation
+                  .check(thisPassword) ? 'valid-password-check'
+                  : 'invalid-password-check' }
+              >
+                {validation.message}
+              </p>
+            ))}
+          </div>
         </form>
+
       )}
       {ocultForm && (
         <button onClick={ () => setOcultForm(!ocultForm) }>Cadastrar nova Senha</button>
       )}
+
     </div>
   );
 }
