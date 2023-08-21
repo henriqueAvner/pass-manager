@@ -1,12 +1,49 @@
 import { useState } from 'react';
 
 export default function Form() {
+  type Typeform = {
+    serviceName: string;
+    login: string;
+    thisPassword: string;
+    address: string;
+  };
   const [ocultForm, setOcultForm] = useState(true);
   const [serviceName, setServiceName] = useState('');
   const [login, setLogin] = useState('');
   const [thisPassword, setThisPassword] = useState('');
-  const [link, setLink] = useState('');
+  const [address, setAddress] = useState('');
   const [disableButton, setdisabbleButton] = useState(true);
+  const [serviceList, setServiceList] = useState<Typeform[]>([]);
+
+  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+  }
+  function handleSubmitButton() {
+    const thisService = {
+      serviceName,
+      login,
+      thisPassword,
+      address,
+    };
+    setServiceList([...serviceList, thisService]);
+    setServiceName('');
+    setLogin('');
+    setThisPassword('');
+    setAddress('');
+    setdisabbleButton(true);
+    setOcultForm(true);
+  }
+
+  function handleForm() {
+    if (serviceName !== ''
+    && login !== ''
+    && thisPassword !== ''
+    && thisPassword.length >= 8 && thisPassword.length <= 16
+    && address !== ''
+    && testPassword()) {
+      setdisabbleButton(false);
+    }
+  }
   const passwordValidation = [
     {
       check: (password: string) => password.length >= 8,
@@ -25,22 +62,6 @@ export default function Form() {
       message: 'Possuir algum caractere especial',
     },
   ];
-  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-  }
-
-  function handleForm() {
-    if (serviceName !== ''
-    && login !== ''
-    && thisPassword !== ''
-    && thisPassword.length >= 8 && thisPassword.length <= 16
-    && link !== ''
-    && testPassword()) {
-      setdisabbleButton(false);
-    } else {
-      setdisabbleButton(true);
-    }
-  }
   const testPassword = () => {
     const regex = /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[@#$%^&+=!]).{8,16}$/;
     return regex.test(thisPassword);
@@ -78,14 +99,13 @@ export default function Form() {
             URL
             <input
               type="text"
-              value={ link }
-              onChange={ ({ target }) => setLink(target.value) }
+              value={ address }
+              onChange={ ({ target }) => setAddress(target.value) }
             />
 
-            <button disabled={ disableButton }>
+            <button disabled={ disableButton } onClick={ handleSubmitButton }>
               Cadastrar
             </button>
-
             <button onClick={ () => { setOcultForm(!ocultForm); } }>Cancelar</button>
           </label>
           <div>
@@ -101,10 +121,25 @@ export default function Form() {
             ))}
           </div>
         </form>
+      )}
+      {serviceList.length === 0 ? (<p>nenhuma senha cadastrada</p>) : (
+        <ul>
+          {serviceList.map((service, index) => (
+            <div key={ index }>
+              <li>
+                <a href={ service.address }>{service.serviceName}</a>
+              </li>
+              <li>
+                {service.login}
+                {service.thisPassword}
+              </li>
+            </div>
 
+          ))}
+        </ul>
       )}
       {ocultForm && (
-        <button onClick={ () => setOcultForm(!ocultForm) }>Cadastrar nova Senha</button>
+        <button onClick={ () => setOcultForm(!ocultForm) }>cadastrar nova senha</button>
       )}
 
     </div>
