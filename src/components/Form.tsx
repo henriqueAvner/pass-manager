@@ -131,10 +131,11 @@ export default function Form() {
               </li>
               <li>
                 {service.login}
+              </li>
+              <li>
                 {service.thisPassword}
               </li>
             </div>
-
           ))}
         </ul>
       )}
