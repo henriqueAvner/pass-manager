@@ -33,6 +33,12 @@ export default function Form() {
     setdisabbleButton(true);
     setOcultForm(true);
   }
+  function clearButton(index: any) {
+    const clearService = serviceList.filter((idx) => idx.serviceName !== index);
+
+    return clearService.length === 0 ? setServiceList([])
+      : setServiceList(clearService);
+  }
 
   function handleForm() {
     if (serviceName !== ''
@@ -135,6 +141,13 @@ export default function Form() {
               <li>
                 {service.thisPassword}
               </li>
+              <button
+                data-testid="remove-btn"
+                onClick={ () => clearButton(service.serviceName) }
+              >
+                Limpar
+
+              </button>
             </div>
           ))}
         </ul>
