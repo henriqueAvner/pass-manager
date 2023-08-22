@@ -140,8 +140,7 @@ export default function Form() {
                 {service.login}
               </li>
               <li>
-                {!hidePass && (service.thisPassword)}
-                {hidePass && ('******')}
+                {!hidePass ? service.thisPassword : '******'}
               </li>
               <button
                 data-testid="remove-btn"
