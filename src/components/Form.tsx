@@ -14,6 +14,7 @@ export default function Form() {
   const [address, setAddress] = useState('');
   const [disableButton, setdisabbleButton] = useState(true);
   const [serviceList, setServiceList] = useState<Typeform[]>([]);
+  const [hidePass, setHidePass] = useState(false);
 
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -139,7 +140,8 @@ export default function Form() {
                 {service.login}
               </li>
               <li>
-                {service.thisPassword}
+                {!hidePass && (service.thisPassword)}
+                {hidePass && ('******')}
               </li>
               <button
                 data-testid="remove-btn"
@@ -152,6 +154,15 @@ export default function Form() {
           ))}
         </ul>
       )}
+      <div>
+        <label>
+          Esconder senhas
+          <input
+            type="checkbox"
+            onClick={ () => setHidePass(!hidePass) }
+          />
+        </label>
+      </div>
       {ocultForm && (
         <button onClick={ () => setOcultForm(!ocultForm) }>cadastrar nova senha</button>
       )}
